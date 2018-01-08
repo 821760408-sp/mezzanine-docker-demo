@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+
+  mezzanine:
+    build:
+      context: .
+      dockerfile: ./compose/local/mezzanine/Dockerfile
+    image: mezzanine:4.2.3
+    container_name: mezzanine-4.2.3
+    ports:
+      - 8888:80
+    volumes:
+      - .:/mezzanine-project
+    links:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/local/postgres/Dockerfile
+    volumes:
+      - mezzanine_postgres_data:/var/lib/postgresql/data
+      - mezzanine_postgres_backup:/backups
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:stable-alpine
+
+  redis:
+
+
+
+volumes:
+  mezzanine_postgres_data: {}
+  mezzanine_postgres_backup: {}
+
+
